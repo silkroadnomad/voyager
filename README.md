@@ -74,12 +74,15 @@ Voyager daemon supports several command line options:
 **Access Control**
 - `--allow, -a`: Allow anyone to add a database. The default is false (deny all except explicitly authorized users).
 
+**Metrics**
+- `--metrics, -m`: Enable metrics collection and reporting. Defaults to false.
+
 **Storage Location**
 - `--directory, -d`: Specify a directory to store Voyager, IPFS, and OrbitDB data. You can also use the `VOYAGER_PATH` environment variable.
 
 **Example with multiple options:**
 ```sh
-voyager daemon -p 9090 -w 9091 -vvv --allow
+voyager daemon -p 9090 -w 9091 -vvv --allow --metrics
 ```
 
 
