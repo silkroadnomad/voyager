@@ -1,18 +1,24 @@
-import { identify } from '@libp2p/identify'
+import { identify, identifyPush } from '@libp2p/identify'
 import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { tcp } from '@libp2p/tcp'
 import { webSockets } from '@libp2p/websockets'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
+import { keychain } from '@libp2p/keychain'
+import { autoTLS } from '@ipshipyard/libp2p-auto-tls'
 // import { mdns } from '@libp2p/mdns'
 import { bootstrap } from '@libp2p/bootstrap'
 
-export const config = ({ privateKey, port, websocketPort } = {}) => {
+export const config = ({ privateKey, port, websocketPort, datastore, metrics } = {}) => {
   const conf = {
+    datastore: datastore,
+    metrics: metrics,
     addresses: {
       listen: [
         `/ip4/0.0.0.0/tcp/${port || 0}`,
-        `/ip4/0.0.0.0/tcp/${websocketPort || 0}/ws`
+        `/ip4/0.0.0.0/tcp/${websocketPort || 0}/ws`,
+        `/ip6/::/tcp/${port || 0}`,
+        `/ip6/::/tcp/${websocketPort || 0}/ws`
       ]
     },
     transports: [
@@ -36,6 +42,13 @@ export const config = ({ privateKey, port, websocketPort } = {}) => {
     ],
     services: {
       identify: identify(),
+      identifyPush: identifyPush(),
+      keychain: keychain(),
+      // requests a certificate and makes it available to libp2p, trusts that
+      // `libp2p.direct` will answer DNS requests successfully
+      autoTLS: autoTLS({
+        autoConfirmAddress: true
+      }),
       pubsub: gossipsub({
         emitSelf: true,
         scoreThresholds: {

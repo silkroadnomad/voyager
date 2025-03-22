@@ -61,9 +61,25 @@ export default async ({ options }) => {
   const datastore = new LevelDatastore(join(hostDirectory, '/', 'ipfs', '/', 'data'))
 
   const authorizedRPCIdentity = await createRPCIdentity({ id: rpcId, directory: options.directory })
-  const libp2p = await createLibp2p(libp2pConfig({ privateKey: authorizedRPCIdentity.keyPair, port: options.port, websocketPort: options.wsport, metrics: prometheusMetrics() }))
+  const libp2p = await createLibp2p(libp2pConfig({ privateKey: authorizedRPCIdentity.keyPair, port: options.port, websocketPort: options.wsport, datastore: datastore, metrics: prometheusMetrics() }))
 
   log('peerid:', libp2p.peerId.toString())
+
+  libp2p.addEventListener('certificate:provision', () => {
+    log('A TLS certificate was provisioned')
+  
+    const interval = setInterval(() => {
+      const mas = libp2p
+        .getMultiaddrs()
+        .filter(ma => WebSocketsSecure.exactMatch(ma) && ma.toString().includes('/sni/'))
+        .map(ma => ma.toString())
+  
+      if (mas.length > 0) {
+        log('addresses:')
+        log(mas.join('\n'))
+        clearInterval(interval)
+      }
+    }, 1_000)
 
   const addresses = libp2p.getMultiaddrs().map(e => e.toString())
   for (const addr of addresses) {
