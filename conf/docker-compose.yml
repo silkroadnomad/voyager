@@ -13,6 +13,7 @@ services:
     image: grafana/grafana
     ports:
       - 9191:3000
+    user: "${GRAFANA_UID:-472}:${GRAFANA_GID:-472}" # chown 472:472 /var/lib/grafana
     volumes:
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml

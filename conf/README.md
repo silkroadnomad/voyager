@@ -9,6 +9,7 @@ This folder is intended to contain various configuration files for the project.
 From inside this directory, you can run the following command to start up a grafana and prometheus instance with some default dashboards and datasources set up.
 
 ```sh
+sudo chown -R 472:472 ./grafana #make use grafana has permission
 docker compose -f docker-compose.yml up -d
 ```
 
