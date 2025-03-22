@@ -13,6 +13,8 @@ import { config as libp2pConfig } from './utils/libp2p-config.js'
 import { rpc as rpcId, appPath, rpcPath, app, host as hostId, hostPath } from './utils/id.js'
 import { saveConfig } from './utils/config-manager.js'
 import { logger, enable } from '@libp2p/logger'
+import { prometheusMetrics } from '@libp2p/prometheus-metrics'
+import { startMetricsServer } from './metrics-server.js'
 
 const createRPCIdentity = async ({ id, directory }) => {
   const keystore = await KeyStore({ path: join(rpcPath(directory), 'keystore') })
@@ -32,9 +34,12 @@ export default async ({ options }) => {
   options = options || {}
 
   const log = logger('voyager:daemon')
-
+  console.log('options.verbose:', options.verbose)
   if (options.verbose > 0) {
     enable('voyager:daemon' + (options.verbose > 1 ? '*' : ':error'))
+    enable('libp2p:' + (options.verbose > 2 ? '*' : ':error'))
+    enable('helia:' + (options.verbose > 3 ? '*' : ':error'))
+    enable('orbitdb:' + (options.verbose > 4 ? '*' : ':error'))
   }
 
   const defaultAccess = options.allow ? Access.ALLOW : Access.DENY
@@ -56,7 +61,8 @@ export default async ({ options }) => {
   const datastore = new LevelDatastore(join(hostDirectory, '/', 'ipfs', '/', 'data'))
 
   const authorizedRPCIdentity = await createRPCIdentity({ id: rpcId, directory: options.directory })
-  const libp2p = await createLibp2p(libp2pConfig({ privateKey: authorizedRPCIdentity.keyPair, port: options.port, websocketPort: options.wsport }))
+  const libp2p = await createLibp2p(libp2pConfig({ privateKey: authorizedRPCIdentity.keyPair, port: options.port, websocketPort: options.wsport, metrics: prometheusMetrics() }))
+
   log('peerid:', libp2p.peerId.toString())
 
   const addresses = libp2p.getMultiaddrs().map(e => e.toString())
@@ -86,6 +92,11 @@ export default async ({ options }) => {
   }
 
   await host.orbitdb.ipfs.libp2p.handle(voyagerRPCProtocol, handleRPCMessages)
+
+  if (options.metrics) {
+    await startMetricsServer()
+    log('Prometheus metrics server enabled')
+  }
 
   process.on('SIGINT', async () => {
     await host.stop()

@@ -135,10 +135,17 @@ yargs(hideBin(process.argv))
     alias: 'd',
     type: 'string',
     description: 'Specify a directory to store Voyager, IPFS and OrbitDB data. You can also use VOYAGER_PATH environment variable to specify the directory.'
-  }).option('allow', {
+  })
+  .option('allow', {
     alias: 'a',
     type: 'boolean',
     description: 'Allow anyone to add a database. The default is false.'
+  })
+  .option('metrics', {
+    alias: 'm',
+    type: 'boolean',
+    description: 'Enable Prometheus metrics server on port 9090',
+    default: false
   })
   .demandCommand(1, 'Error: specify a command.')
   .help()
