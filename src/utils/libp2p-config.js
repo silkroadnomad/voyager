@@ -7,7 +7,7 @@ import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { keychain } from '@libp2p/keychain'
 import { autoTLS } from '@ipshipyard/libp2p-auto-tls'
 import { kadDHT, removePrivateAddressesMapper } from '@libp2p/kad-dht'
-import { autoNAT } from '@libp2p/auto-nat'
+import { autoNAT } from '@libp2p/autonat'
 import { bootstrap } from '@libp2p/bootstrap'
 
 export const config = ({ privateKey, port, websocketPort, datastore, metrics } = {}) => {
