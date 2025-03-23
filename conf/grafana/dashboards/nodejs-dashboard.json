@@ -1798,6 +1798,7 @@
     ]
   },
   "timezone": "",
+  "allowUiUpdates": true,
   "title": "Nodejs Metrics",
   "uid": "voyager-nodejs",
   "version": 1,
