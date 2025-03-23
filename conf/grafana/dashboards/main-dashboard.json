@@ -1999,8 +1999,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "helia-http-gateway default dashboard",
-  "uid": "helia-http-gateway-default",
+  "title": "voyager default dashboard",
+  "uid": "voyager-default",
   "version": 1,
   "weekStart": ""
 }
