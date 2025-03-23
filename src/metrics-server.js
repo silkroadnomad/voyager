@@ -3,7 +3,7 @@ import { register, collectDefaultMetrics } from 'prom-client';
 
 export const startMetricsServer = async () => {
   // Initialize default metrics collection
-  collectDefaultMetrics();
+  // collectDefaultMetrics(); // TODO: remove already in libp2p-config
 
   // Create an HTTP server to expose metrics
   const server = http.createServer(async (req, res) => {
