@@ -80,6 +80,7 @@ export default async ({ options }) => {
         clearInterval(interval)
       }
     }, 1_000)
+  })
 
   const addresses = libp2p.getMultiaddrs().map(e => e.toString())
   for (const addr of addresses) {
