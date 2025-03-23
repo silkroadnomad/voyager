@@ -15,6 +15,7 @@ import { saveConfig } from './utils/config-manager.js'
 import { logger, enable } from '@libp2p/logger'
 import { prometheusMetrics } from '@libp2p/prometheus-metrics'
 import { startMetricsServer } from './metrics-server.js'
+import { WebSocketsSecure } from '@multiformats/multiaddr-matcher'
 
 const createRPCIdentity = async ({ id, directory }) => {
   const keystore = await KeyStore({ path: join(rpcPath(directory), 'keystore') })
