@@ -1799,7 +1799,7 @@
   },
   "timezone": "",
   "title": "Nodejs Metrics",
-  "uid": "helia-http-gateway-nodejs",
+  "uid": "voyager-nodejs",
   "version": 1,
   "weekStart": ""
 }

@@ -1971,6 +1971,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
+  "allowUiUpdates": true,
   "title": "voyager default dashboard",
   "uid": "voyager-default",
   "version": 28,
