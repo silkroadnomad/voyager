@@ -74,6 +74,10 @@ Voyager daemon supports several command line options:
 **Access Control**
 - `--allow, -a`: Allow anyone to add a database. The default is false (deny all except explicitly authorized users).
 
+**Auto-TLS Configuration**
+- `--staging, -s`: Use Let's Encrypt staging environment for auto-TLS certificates. Useful for testing certificate provisioning. Defaults to false (production environment).
+
+
 **Metrics**
 - `--metrics, -m`: Enable metrics collection and reporting. Defaults to false.
 
@@ -82,7 +86,7 @@ Voyager daemon supports several command line options:
 
 **Example with multiple options:**
 ```sh
-voyager daemon -p 9090 -w 9091 -vvv --allow --metrics
+voyager daemon -p 9090 -w 9091 -vvv -s --allow --metrics
 ```
 
 

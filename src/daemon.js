@@ -62,7 +62,14 @@ export default async ({ options }) => {
   const datastore = new LevelDatastore(join(hostDirectory, '/', 'ipfs', '/', 'data'))
 
   const authorizedRPCIdentity = await createRPCIdentity({ id: rpcId, directory: options.directory })
-  const libp2p = await createLibp2p(libp2pConfig({ privateKey: authorizedRPCIdentity.keyPair, port: options.port, websocketPort: options.wsport, datastore: datastore, metrics: prometheusMetrics() }))
+  const libp2p = await createLibp2p(libp2pConfig({ 
+    privateKey: authorizedRPCIdentity.keyPair, 
+    port: options.port, 
+    websocketPort: options.wsport, 
+    datastore: datastore, 
+    metrics: prometheusMetrics(),
+    staging: options.staging 
+  }))
 
   log('peerid:', libp2p.peerId.toString())
 

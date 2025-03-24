@@ -23,6 +23,12 @@ yargs(hideBin(process.argv))
           description: 'The port to listen on for WebSockets. Defaults to 0.',
           type: 'number'
         })
+        .option('staging', {
+          alias: 's',
+          type: 'boolean',
+          description: 'Use Let\'s Encrypt staging environment for auto-TLS certificates',
+          default: false
+        })
     },
     async (argv) => {
       argv.directory = process.env.VOYAGER_PATH || argv.directory
