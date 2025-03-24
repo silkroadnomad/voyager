@@ -27,7 +27,9 @@ services:
     ports:
       - "9091:9091"
       - "9092:9092"
-    command: ["node", "./src/bin/cli.js", "daemon", "-p", "9091", "-w", "9092", "-m", "-vvvv"]
+    command: ["node", "./src/bin/cli.js", "daemon", "-p", "9091", "-w", "9092", "-m", "-vvvv", "-d", "/app/data"]
     restart: always
     volumes:
-      - ./voyager:/app/voyager/voyager
+      - ./voyager:/app/data
+    environment:
+      - VOYAGER_PATH=/app/data
