@@ -53,7 +53,7 @@ export const config = ({ privateKey, port, websocketPort, datastore, metrics, st
       denyDialMultiaddr: () => false // allow dialling of private addresses.
     },
      peerDiscovery: [
-      bootstrap: bootstrap({
+      bootstrap({
         list: [
           '/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN',
           '/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb',
