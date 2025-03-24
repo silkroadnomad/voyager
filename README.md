@@ -68,6 +68,10 @@ Voyager daemon supports several command line options:
 - `--port, -p`: The port to listen on for the libp2p TCP transport. Defaults to 0 (random available port).
 - `--wsport, -w`: The port to listen on for WebSockets. Defaults to 0 (random available port).
 
+**IP Address Announcement**
+- `--ip4`: Specify IPv4 address to announce to the network (e.g., `--ip4 "37.27.185.96"`)
+- `--ip6`: Specify IPv6 address to announce to the network (e.g., `--ip6 "2a01:4f9:c013:cc9::1"`)
+
 **Logging**
 - `--verbose, -v`: Enable verbose logging. Use multiple times (e.g., `-vvv`) for increased verbosity.
 
@@ -76,7 +80,6 @@ Voyager daemon supports several command line options:
 
 **Auto-TLS Configuration**
 - `--staging, -s`: Use Let's Encrypt staging environment for auto-TLS certificates. Useful for testing certificate provisioning. Defaults to false (production environment).
-
 
 **Metrics**
 - `--metrics, -m`: Enable metrics collection and reporting. Defaults to false.

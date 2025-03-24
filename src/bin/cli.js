@@ -142,6 +142,14 @@ yargs(hideBin(process.argv))
     type: 'string',
     description: 'Specify a directory to store Voyager, IPFS and OrbitDB data. You can also use VOYAGER_PATH environment variable to specify the directory.'
   })
+  .option('ip4', {
+    type: 'string',
+    description: 'Specify IPv4 address to announce (e.g., --ip4 "1.2.3.4")'
+  })
+  .option('ip6', {
+    type: 'string',
+    description: 'Specify IPv6 address to announce (e.g., --ip6 "2001:db8::1")'
+  })
   .option('allow', {
     alias: 'a',
     type: 'boolean',

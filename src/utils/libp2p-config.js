@@ -10,7 +10,23 @@ import { kadDHT, removePrivateAddressesMapper } from '@libp2p/kad-dht'
 import { autoNAT } from '@libp2p/autonat'
 import { bootstrap } from '@libp2p/bootstrap'
 
-export const config = ({ privateKey, port, websocketPort, datastore, metrics, staging } = {}) => {
+export const config = ({ privateKey, port, websocketPort, datastore, metrics, staging, ip4, ip6 } = {}) => {
+  const announceAddrs = []
+  
+  if (ip4) {
+    announceAddrs.push(
+      `/ip4/${ip4}/tcp/${port || 0}`,
+      `/ip4/${ip4}/tcp/${websocketPort || 0}/ws`
+    )
+  }
+  
+  if (ip6) {
+    announceAddrs.push(
+      `/ip6/${ip6}/tcp/${port || 0}`,
+      `/ip6/${ip6}/tcp/${websocketPort || 0}/ws`
+    )
+  }
+
   const conf = {
     datastore: datastore,
     metrics: metrics,
@@ -21,10 +37,7 @@ export const config = ({ privateKey, port, websocketPort, datastore, metrics, st
         `/ip6/::/tcp/${port || 0}`,
         `/ip6/::/tcp/${websocketPort || 0}/ws`
       ],
-      appendAnnounce: [
-        `/ip4/37.27.185.96/tcp/${port || 0}`,
-        `/ip4/37.27.185.96/tcp/${websocketPort || 0}/ws`,
-      ]
+      appendAnnounce: announceAddrs
     },
     transports: [
       tcp(),
