@@ -71,10 +71,10 @@ export default async ({ options }) => {
     staging: options.staging 
   }))
 
-  log('peerid:', libp2p.peerId.toString())
+  console.log('peerid:', libp2p.peerId.toString())
 
   libp2p.addEventListener('certificate:provision', () => {
-    log('A TLS certificate was provisioned')
+    console.log('A TLS certificate was provisioned')
   
     const interval = setInterval(() => {
       const mas = libp2p
@@ -83,8 +83,8 @@ export default async ({ options }) => {
         .map(ma => ma.toString())
   
       if (mas.length > 0) {
-        log('addresses:')
-        log(mas.join('\n'))
+        console.log('addresses:')
+        console.log(mas.join('\n'))
         clearInterval(interval)
       }
     }, 1_000)
