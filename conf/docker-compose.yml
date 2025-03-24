@@ -31,5 +31,3 @@ services:
     restart: always
     volumes:
       - ./voyager:/app/data
-    environment:
-      - VOYAGER_PATH=/app/data
