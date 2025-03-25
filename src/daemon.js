@@ -16,6 +16,7 @@ import { logger, enable } from '@libp2p/logger'
 import { prometheusMetrics } from '@libp2p/prometheus-metrics'
 import { startMetricsServer } from './metrics-server.js'
 import { WebSocketsSecure } from '@multiformats/multiaddr-matcher'
+import restApi from './rest-api.js' // Neu: REST-API importieren
 
 const createRPCIdentity = async ({ id, directory }) => {
   const keystore = await KeyStore({ path: join(rpcPath(directory), 'keystore') })
@@ -48,6 +49,7 @@ export default async ({ options }) => {
   options.verbose = options.verbose || 0
   options.port = options.port || 0
   options.wsport = options.wsport || 0
+  options.restport = options.restport || 3006 // Neu: REST-API-Port
 
   log('app:', app)
   log('host:', hostId)
@@ -120,12 +122,18 @@ export default async ({ options }) => {
 
   await host.orbitdb.ipfs.libp2p.handle(voyagerRPCProtocol, handleRPCMessages)
 
+  // Neu: REST-API starten
+  const api = await restApi({ host, port: options.restport })
+  log(`REST API started on port ${options.restport}`)
+
   if (options.metrics) {
     await startMetricsServer()
     log('Prometheus metrics server enabled')
   }
 
   process.on('SIGINT', async () => {
+    // Neu: REST-API stoppen
+    await api.stop()
     await host.stop()
     await blockstore.close()
     await datastore.close()

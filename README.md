@@ -67,6 +67,7 @@ Voyager daemon supports several command line options:
 **Port Configuration**
 - `--port, -p`: The port to listen on for the libp2p TCP transport. Defaults to 0 (random available port).
 - `--wsport, -w`: The port to listen on for WebSockets. Defaults to 0 (random available port).
+- `--restport, -r`: The port to listen on for the REST API. Defaults to 3006.
 
 **IP Address Announcement**
 - `--ip4`: Specify IPv4 address to announce to the network (e.g., `--ip4 "37.27.185.96"`)
@@ -90,7 +91,7 @@ Voyager daemon supports several command line options:
 
 **Example with multiple options:**
 ```sh
-voyager daemon -p 9090 -w 9091 -vvv -s --allow --metrics
+voyager daemon -p 9090 -w 9091 -r 8080 -vvv -s --allow --metrics
 ```
 
 
@@ -235,6 +236,32 @@ const db = await orbitdb.open('my-db')
 // remove the address from voyager (can also pass an array of addresses)
 await voyager.remove(db.address)
 ```
+
+## REST API
+
+Voyager now includes a REST API that allows you to interact with the server using HTTP requests. This is particularly useful for web applications that need to communicate with Voyager.
+
+The REST API is automatically started when you run the Voyager daemon and listens on port 3006 by default. You can change the port using the `--restport` option:
+
+```sh
+voyager daemon --restport 8080
+```
+
+### API Endpoints
+
+The REST API provides endpoints for managing databases and users:
+
+- `GET /databases` - List all databases
+- `GET /databases/:address` - Get details of a specific database
+- `POST /databases` - Add a database
+- `DELETE /databases/:address` - Remove a database
+- `GET /users` - List all authorized users
+- `POST /users` - Add an authorized user
+- `DELETE /users/:id` - Remove an authorized user
+- `GET /id` - Get the Voyager server ID
+- `GET /address` - Get the Voyager server addresses
+
+For detailed documentation on the REST API, see the [REST API Documentation](docs/rest-api.md).
 
 ## The OrbitDB Voyager Protocol
 

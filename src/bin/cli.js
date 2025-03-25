@@ -23,6 +23,12 @@ yargs(hideBin(process.argv))
           description: 'The port to listen on for WebSockets. Defaults to 0.',
           type: 'number'
         })
+        .option('restport', {
+          alias: 'r',
+          description: 'The port to listen on for the REST API. Defaults to 3006.',
+          type: 'number',
+          default: 3006
+        })
         .option('staging', {
           alias: 's',
           type: 'boolean',
