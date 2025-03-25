@@ -80,6 +80,7 @@ Voyager daemon supports several command line options:
 
 **Auto-TLS Configuration**
 - `--staging, -s`: Use Let's Encrypt staging environment for auto-TLS certificates. Useful for testing certificate provisioning. Defaults to false (production environment).
+- `--disable-auto-tls`: Disable automatic TLS certificate provisioning. Defaults to false (auto-TLS enabled).
 
 **Metrics**
 - `--metrics, -m`: Enable metrics collection and reporting. Defaults to false.

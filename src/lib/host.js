@@ -33,7 +33,11 @@ export default async ({ orbitdb, defaultAccess, verbose } = {}) => {
   let count = 0
   for await (const db of databases.iterator()) {
     log('open', db.key)
-    await orbitdb.open(db.key)
+    const _db = await orbitdb.open(db.key)
+    log('database data after replication:', await _db.all())
+    for await (const entry of _db.log.iterator({ reverse: true })) {
+      console.log('entry', entry.payload.value);
+    }
     count++
   }
 

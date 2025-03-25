@@ -10,7 +10,7 @@ import { kadDHT, removePrivateAddressesMapper } from '@libp2p/kad-dht'
 import { autoNAT } from '@libp2p/autonat'
 import { bootstrap } from '@libp2p/bootstrap'
 
-export const config = ({ privateKey, port, websocketPort, datastore, metrics, staging, ip4, ip6 } = {}) => {
+export const config = ({ privateKey, port, websocketPort, datastore, metrics, staging, ip4, ip6, disableAutoTLS } = {}) => {
   const announceAddrs = []
   
   if (ip4) {
@@ -52,8 +52,14 @@ export const config = ({ privateKey, port, websocketPort, datastore, metrics, st
     connectionGater: {
       denyDialMultiaddr: () => false // allow dialling of private addresses.
     },
-     peerDiscovery: [
-      bootstrap({
+    services: {
+      autoNAT: autoNAT(),
+      aminoDHT: kadDHT({
+        protocol: '/ipfs/kad/1.0.0',
+        peerInfoMapper: removePrivateAddressesMapper
+      }),
+          // these peers heldp us fill our DHT routing table
+      bootstrap: bootstrap({
         list: [
           '/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN',
           '/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb',
@@ -61,25 +67,18 @@ export const config = ({ privateKey, port, websocketPort, datastore, metrics, st
           '/dnsaddr/va1.bootstrap.libp2p.io/p2p/12D3KooWKnDdG3iXw9eTFijk3EWSunZcFi54Zka4wmtqtt6rPxc8',
           '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ'
         ]
-      })
-       /* mdns() */
-     ],
-    services: {
-      autoNAT: autoNAT(),
-      aminoDHT: kadDHT({
-        protocol: '/ipfs/kad/1.0.0',
-        peerInfoMapper: removePrivateAddressesMapper
       }),
       identify: identify(),
       identifyPush: identifyPush(),
       keychain: keychain(),
-      // requests a certificate and makes it available to libp2p, trusts that
-      // `libp2p.direct` will answer DNS requests successfully
-      autoTLS: autoTLS({
-        autoConfirmAddress: true,
-        ...(staging ? {
-          acmeDirectory: 'https://acme-staging-v02.api.letsencrypt.org/directory'
-        } : {})
+      // Only include autoTLS if not disabled
+      ...(disableAutoTLS ? {} : {
+        autoTLS: autoTLS({
+          autoConfirmAddress: true,
+          ...(staging ? {
+            acmeDirectory: 'https://acme-staging-v02.api.letsencrypt.org/directory'
+          } : {})
+        })
       }),
       pubsub: gossipsub({
         emitSelf: true,

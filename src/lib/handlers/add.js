@@ -26,6 +26,9 @@ export default async ({ orbitdb, databases, id, addresses }) => {
 
     if (!hasDb) {
       await waitForReplication(db)
+      
+      // Print database data after replication
+      log('database data after replication:', await db.all())
     }
 
     await databases.set(address, identities)

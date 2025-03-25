@@ -68,7 +68,9 @@ export default async ({ options }) => {
     websocketPort: options.wsport, 
     datastore: datastore, 
     metrics: prometheusMetrics(),
-    staging: options.staging 
+    staging: options.staging,
+    ip4: options.ip4,
+    ip6: options.ip6
   }))
 
   console.log('peerid:', libp2p.peerId.toString())

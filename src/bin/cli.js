@@ -29,6 +29,11 @@ yargs(hideBin(process.argv))
           description: 'Use Let\'s Encrypt staging environment for auto-TLS certificates',
           default: false
         })
+        .option('disable-auto-tls', {
+          type: 'boolean',
+          description: 'Disable automatic TLS certificate provisioning',
+          default: false
+        })
     },
     async (argv) => {
       argv.directory = process.env.VOYAGER_PATH || argv.directory

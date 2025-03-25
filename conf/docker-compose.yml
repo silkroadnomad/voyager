@@ -19,7 +19,6 @@ services:
       - ./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
       - ./grafana:/var/lib/grafana
     restart: unless-stopped
-
   voyager:
     build:
       context: ..
