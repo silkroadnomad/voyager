@@ -48,6 +48,7 @@ export default async ({ options }) => {
   options.verbose = options.verbose || 0
   options.port = options.port || 0
   options.wsport = options.wsport || 0
+  options.allowRestDelete = options.allowRestDelete || false
 
   log('app:', app)
   log('host:', hostId)
@@ -121,7 +122,7 @@ export default async ({ options }) => {
   await host.orbitdb.ipfs.libp2p.handle(voyagerRPCProtocol, handleRPCMessages)
 
   if (options.metrics) {
-    await startMetricsServer(host)
+    await startMetricsServer(host, options)
     log('Prometheus metrics server enabled')
     log('Pinned databases endpoint enabled')
   }

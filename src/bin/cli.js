@@ -166,6 +166,11 @@ yargs(hideBin(process.argv))
     description: 'Enable Prometheus metrics server on port 9090',
     default: false
   })
+  .option('allow-rest-delete', {
+    type: 'boolean',
+    description: 'Allow database deletion via REST API. The default is false.',
+    default: false
+  })
   .demandCommand(1, 'Error: specify a command.')
   .help()
   .alias('h', 'help')

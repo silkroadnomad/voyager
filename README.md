@@ -77,6 +77,7 @@ Voyager daemon supports several command line options:
 
 **Access Control**
 - `--allow, -a`: Allow anyone to add a database. The default is false (deny all except explicitly authorized users).
+- `--allow-rest-delete`: Allow database deletion via REST API. The default is false.
 
 **Auto-TLS Configuration**
 - `--staging, -s`: Use Let's Encrypt staging environment for auto-TLS certificates. Useful for testing certificate provisioning. Defaults to false (production environment).
@@ -273,6 +274,77 @@ addresses: One or more database addresses to remove from the storage
 ```
 
 If successful, an OK response will be sent. If it fails, an error will be returned.
+
+## REST API
+
+When running with `--metrics`, Voyager exposes several HTTP endpoints on port 9090:
+
+### Endpoints
+
+**Metrics**
+- `GET /metrics`: Returns Prometheus metrics
+  ```sh
+  curl http://localhost:9090/metrics
+  ```
+
+**Database Operations**
+- `GET /pinned-databases`: Lists all pinned databases and their metadata
+  ```sh
+  curl http://localhost:9090/pinned-databases
+  ```
+
+- `GET /database-history?address=<db-address>`: Returns the history of operations for a specific database
+  ```sh
+  curl http://localhost:9090/database-history?address=zdpuAkkFknp3H8kAqHPLWUK3Hi44nawtwqkbsVGnwyqAqGvkz
+  ```
+
+- `DELETE /database?address=<db-address>`: Deletes a database (requires `--allow-rest-delete` flag)
+  ```sh
+  curl -X DELETE http://localhost:9090/database?address=zdpuAkkFknp3H8kAqHPLWUK3Hi44nawtwqkbsVGnwyqAqGvkz
+  ```
+
+### Response Examples
+
+**Pinned Databases Response**
+```json
+[
+  {
+    "address": "zdpuAkkFknp3H8kAqHPLWUK3Hi44nawtwqkbsVGnwyqAqGvkz",
+    "name": "my-database",
+    "type": "documentstore",
+    "accessController": "ipfs",
+    "entries": [...]
+  }
+]
+```
+
+**Database History Response**
+```json
+{
+  "address": "zdpuAkkFknp3H8kAqHPLWUK3Hi44nawtwqkbsVGnwyqAqGvkz",
+  "name": "my-database",
+  "type": "documentstore",
+  "accessController": "ipfs",
+  "history": [
+    {
+      "hash": "zdpuAkkFknp3H8k...",
+      "id": "04123...",
+      "payload": { ... },
+      "identity": "04ab12...",
+      "timestamp": 1647356813,
+      "next": ["zdpuAkkFknp3H8k..."],
+      "v": 1
+    }
+  ]
+}
+```
+
+**Error Responses**
+- 400: Bad Request (e.g., missing address parameter)
+- 403: Forbidden (when trying to delete without `--allow-rest-delete`)
+- 404: Not Found
+- 500: Internal Server Error
+- 503: Service Unavailable (when host is not available)
 
 ## Allowing and Denying User Access
 

@@ -1,5 +1,5 @@
 {
-  "name": "@orbitdb/voyager",
+  "name": "@le-space/voyager",
   "version": "0.0.5",
   "description": "A storage service OrbitDB databases.",
   "main": "./src/index.js",

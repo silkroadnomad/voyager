@@ -2,7 +2,7 @@ import http from 'http';
 import { register, collectDefaultMetrics } from 'prom-client';
 import url from 'url';
 
-export const startMetricsServer = async (host) => {
+export const startMetricsServer = async (host, options = {}) => {
 
   // Create an HTTP server to expose metrics
   const server = http.createServer(async (req, res) => {
@@ -17,6 +17,14 @@ export const startMetricsServer = async (host) => {
       res.setHeader('Content-Type', register.contentType);
       res.end(await register.metrics());
     } else if (pathname === '/database' && method === 'DELETE') {
+      // Check if REST delete is allowed
+      if (!options.allowRestDelete) {
+        res.statusCode = 403;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'REST API deletion is disabled. Enable with --allow-rest-delete' }));
+        return;
+      }
+
       // Handle database deletion
       if (!host) {
         res.statusCode = 503;
