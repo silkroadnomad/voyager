@@ -71,7 +71,8 @@ export default async ({ options }) => {
     metrics: prometheusMetrics(),
     staging: options.staging,
     ip4: options.ip4,
-    ip6: options.ip6
+    ip6: options.ip6,
+    disableAutoTLS: options.disableAutoTLS
   }))
 
   console.log('peerid:', libp2p.peerId.toString())
