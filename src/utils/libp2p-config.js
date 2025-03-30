@@ -11,7 +11,6 @@ import { autoNAT } from '@libp2p/autonat'
 import { bootstrap } from '@libp2p/bootstrap'
 
 export const config = ({ privateKey, port, websocketPort, datastore, metrics, staging, ip4, ip6, disableAutoTLS } = {}) => {
-  console.log('disableAutoTLS', disableAutoTLS)
   const announceAddrs = []
   
   if (ip4) {
