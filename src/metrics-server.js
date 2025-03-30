@@ -152,7 +152,7 @@ export const startMetricsServer = async (host, options = {}) => {
   });
 
   // Start the server
-  const port = 9090; // Default Prometheus port
+  const port = options.metricsPort || 9090;
   server.listen(port, () => {
     console.log(`Metrics server running at http://localhost:${port}/metrics`);
     console.log(`Pinned databases available at http://localhost:${port}/pinned-databases`);

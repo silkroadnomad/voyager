@@ -123,8 +123,9 @@ export default async ({ options }) => {
   await host.orbitdb.ipfs.libp2p.handle(voyagerRPCProtocol, handleRPCMessages)
 
   if (options.metrics) {
-    await startMetricsServer(host, options)
-    log('Prometheus metrics server enabled')
+    const metricsPort = typeof options.metrics === 'number' ? options.metrics : 9090;
+    await startMetricsServer(host, { ...options, metricsPort })
+    log('Prometheus metrics server enabled on port ' + metricsPort)
     log('Pinned databases endpoint enabled')
   }
 

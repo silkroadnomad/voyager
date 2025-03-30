@@ -84,17 +84,21 @@ Voyager daemon supports several command line options:
 - `--disable-auto-tls`: Disable automatic TLS certificate provisioning. Defaults to false (auto-TLS enabled).
 
 **Metrics**
-- `--metrics, -m`: Enable metrics collection and reporting. Defaults to false.
+- `--metrics, -m [port]`: Enable metrics collection and reporting. Optional port number can be specified (default: 9090). Examples:
+  - `--metrics` or `-m`: Enable with default prometheus port 9090
+  - `--metrics 9099` or `-m 9099`: Enable with custom port 9099
 
 **Storage Location**
 - `--directory, -d`: Specify a directory to store Voyager, IPFS, and OrbitDB data. You can also use the `VOYAGER_PATH` environment variable.
 
 **Example with multiple options:**
 ```sh
+# Using default metrics port (9090)
 voyager daemon -p 9090 -w 9091 -vvv -s --allow --metrics
+
+# Using custom metrics port (9099)
+voyager daemon -p 9090 -w 9091 -vvv -s --allow --metrics 9099
 ```
-
-
 
 ### Docker
 
@@ -277,7 +281,7 @@ If successful, an OK response will be sent. If it fails, an error will be return
 
 ## REST API
 
-When running with `--metrics`, Voyager exposes several HTTP endpoints on port 9090:
+When running with `--metrics`, Voyager exposes several HTTP endpoints (default port 9090, configurable with `--metrics <port>`):
 
 ### Endpoints
 

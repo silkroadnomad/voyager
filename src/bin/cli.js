@@ -162,9 +162,12 @@ yargs(hideBin(process.argv))
   })
   .option('metrics', {
     alias: 'm',
-    type: 'boolean',
-    description: 'Enable Prometheus metrics server on port 9090',
-    default: false
+    description: 'Enable Prometheus metrics server. Optional port number can be specified (default: 9090)',
+    coerce: (arg) => {
+      if (arg === true) return 9090;  // Default port when just --metrics is used
+      if (typeof arg === 'number') return arg;  // Use specified port
+      return false;  // Metrics disabled
+    }
   })
   .option('allow-rest-delete', {
     type: 'boolean',
