@@ -17,6 +17,14 @@ export const startMetricsServer = async (host, options = {}) => {
       res.setHeader('Content-Type', register.contentType);
       res.end(await register.metrics());
     } else if (pathname === '/database' && method === 'DELETE') {
+      // Check if REST API is enabled
+      if (!options.enableRest) {
+        res.statusCode = 403;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'REST API is disabled. Enable with --rest' }));
+        return;
+      }
+
       // Check if REST delete is allowed
       if (!options.allowRestDelete) {
         res.statusCode = 403;
@@ -55,7 +63,14 @@ export const startMetricsServer = async (host, options = {}) => {
         res.end(JSON.stringify({ error: error.message }));
       }
     } else if (pathname === '/pinned-databases') {
-      // Endpunkt für gepinnte Datenbanken
+      // Check if REST API is enabled
+      if (!options.enableRest) {
+        res.statusCode = 403;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'REST API is disabled. Enable with --rest' }));
+        return;
+      }
+
       if (!host) {
         res.statusCode = 503;
         res.setHeader('Content-Type', 'application/json');
@@ -78,7 +93,6 @@ export const startMetricsServer = async (host, options = {}) => {
             type: dbInstance.type,
             accessController: dbInstance.access.type,
             entries: await dbInstance.all(),
-            // Weitere Metadaten können hier hinzugefügt werden
           };
           
           pinnedDatabases.push(metadata);
@@ -93,7 +107,14 @@ export const startMetricsServer = async (host, options = {}) => {
         res.end(JSON.stringify({ error: error.message }));
       }
     } else if (pathname === '/database-history') {
-      // Endpunkt für die Datenbankhistorie
+      // Check if REST API is enabled
+      if (!options.enableRest) {
+        res.statusCode = 403;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'REST API is disabled. Enable with --rest' }));
+        return;
+      }
+
       if (!host) {
         res.statusCode = 503;
         res.setHeader('Content-Type', 'application/json');
@@ -101,7 +122,6 @@ export const startMetricsServer = async (host, options = {}) => {
         return;
       }
 
-      // Adresse aus der Abfrage abrufen
       const address = query.address;
       if (!address) {
         res.statusCode = 400;
@@ -111,10 +131,8 @@ export const startMetricsServer = async (host, options = {}) => {
       }
 
       try {
-        // Datenbank öffnen
         const dbInstance = await host.orbitdb.open(address);
         
-        // Log-Einträge abrufen
         const history = [];
         for await (const entry of dbInstance.log.iterator({ reverse: true })) {
           history.push({
@@ -128,7 +146,6 @@ export const startMetricsServer = async (host, options = {}) => {
           });
         }
 
-        // Metadaten und Historie zusammenfassen
         const result = {
           address: dbInstance.address.toString(),
           name: dbInstance.address.path,
@@ -137,7 +154,6 @@ export const startMetricsServer = async (host, options = {}) => {
           history: history
         };
 
-        // Als JSON zurückgeben
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(result, null, 2));
       } catch (error) {
@@ -155,9 +171,13 @@ export const startMetricsServer = async (host, options = {}) => {
   const port = options.metricsPort || 9090;
   server.listen(port, () => {
     console.log(`Metrics server running at http://localhost:${port}/metrics`);
-    console.log(`Pinned databases available at http://localhost:${port}/pinned-databases`);
-    console.log(`Database history available at http://localhost:${port}/database-history?address=<db-address>`);
-    console.log(`Delete database available at http://localhost:${port}/database?address=<db-address> (DELETE method)`);
+    if (options.enableRest) {
+      console.log(`Pinned databases available at http://localhost:${port}/pinned-databases`);
+      console.log(`Database history available at http://localhost:${port}/database-history?address=<db-address>`);
+      if (options.allowRestDelete) {
+        console.log(`Delete database available at http://localhost:${port}/database?address=<db-address> (DELETE method)`);
+      }
+    }
   });
 
   return server;

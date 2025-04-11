@@ -124,9 +124,16 @@ export default async ({ options }) => {
 
   if (options.metrics) {
     const metricsPort = typeof options.metrics === 'number' ? options.metrics : 9090;
-    await startMetricsServer(host, { ...options, metricsPort })
+    await startMetricsServer(host, { 
+      ...options,
+      metricsPort,
+      enableRest: options.rest,
+      allowRestDelete: options.allowRestDelete 
+    })
     log('Prometheus metrics server enabled on port ' + metricsPort)
-    log('Pinned databases endpoint enabled')
+    if (options.rest) {
+      log('REST API endpoints enabled')
+    }
   }
 
   process.on('SIGINT', async () => {

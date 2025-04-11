@@ -279,17 +279,46 @@ addresses: One or more database addresses to remove from the storage
 
 If successful, an OK response will be sent. If it fails, an error will be returned.
 
-## REST API
+## Metrics and REST API
 
-When running with `--metrics`, Voyager exposes several HTTP endpoints (default port 9090, configurable with `--metrics <port>`):
+### Metrics Server
 
-### Endpoints
+The metrics server can be enabled using the `--metrics` (or `-m`) flag when starting Voyager. By default, it runs on port 9090.
 
-**Metrics**
-- `GET /metrics`: Returns Prometheus metrics
+**Enabling Metrics**
+```sh
+# Enable metrics with default port (9090)
+voyager daemon --metrics
+
+# Enable metrics with custom port
+voyager daemon --metrics 9099
+```
+
+**Available Endpoints**
+- `GET /metrics`: Returns Prometheus metrics in the standard format
   ```sh
   curl http://localhost:9090/metrics
   ```
+
+For Grafana and Prometheus setup, see the [configuration documentation](conf/README.md).
+
+### REST API
+
+The REST API can be enabled independently using the `--rest` (`-r`) flag. By default, it shares the same port as the metrics server (default: 9090).
+
+**Enabling the API**
+```sh
+# Enable only REST API (default port 9090)
+voyager daemon --rest
+
+# Enable both REST API and metrics
+voyager daemon --rest --metrics
+
+# Enable REST API with deletion capability
+voyager daemon --rest --allow-rest-delete
+```
+
+### Endpoints
 
 **Database Operations**
 - `GET /pinned-databases`: Lists all pinned databases and their metadata
@@ -302,7 +331,7 @@ When running with `--metrics`, Voyager exposes several HTTP endpoints (default p
   curl http://localhost:9090/database-history?address=zdpuAkkFknp3H8kAqHPLWUK3Hi44nawtwqkbsVGnwyqAqGvkz
   ```
 
-- `DELETE /database?address=<db-address>`: Deletes a database (requires `--allow-rest-delete` flag)
+- `DELETE /database?address=<db-address>`: Deletes a database (requires both `--rest` and `--allow-rest-delete` flags)
   ```sh
   curl -X DELETE http://localhost:9090/database?address=zdpuAkkFknp3H8kAqHPLWUK3Hi44nawtwqkbsVGnwyqAqGvkz
   ```
@@ -345,10 +374,16 @@ When running with `--metrics`, Voyager exposes several HTTP endpoints (default p
 
 **Error Responses**
 - 400: Bad Request (e.g., missing address parameter)
-- 403: Forbidden (when trying to delete without `--allow-rest-delete`)
+- 403: Forbidden (when REST API is disabled or trying to delete without proper flags)
 - 404: Not Found
 - 500: Internal Server Error
 - 503: Service Unavailable (when host is not available)
+
+### Security Considerations
+
+- The REST API is disabled by default and must be explicitly enabled with `--rest`
+- Database deletion through the REST API requires an additional `--allow-rest-delete` flag
+- Consider running behind a reverse proxy for additional security in production environments
 
 ## Allowing and Denying User Access
 

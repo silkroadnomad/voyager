@@ -169,12 +169,17 @@ yargs(hideBin(process.argv))
       return false;  // Metrics disabled
     }
   })
-  .option('allow-rest-delete', {
+  .option('rest', {
+    alias: 'r',
+    description: 'Enable REST API endpoints',
     type: 'boolean',
-    description: 'Allow database deletion via REST API. The default is false.',
     default: false
   })
-  .demandCommand(1, 'Error: specify a command.')
-  .help()
-  .alias('h', 'help')
-  .parse()
+  .option('allow-rest-delete', {
+    type: 'boolean',
+    description: 'Allow database deletion via REST API. Requires --rest to be enabled.',
+    default: false
+    .demandCommand(1, 'Error: specify a command.')
+    .help()
+    .alias('h', 'help')
+    .parse()
