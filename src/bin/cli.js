@@ -179,7 +179,8 @@ yargs(hideBin(process.argv))
     type: 'boolean',
     description: 'Allow database deletion via REST API. Requires --rest to be enabled.',
     default: false
-    .demandCommand(1, 'Error: specify a command.')
-    .help()
-    .alias('h', 'help')
-    .parse()
+  })
+  .demandCommand(1, 'Error: specify a command.')
+  .help()
+  .alias('h', 'help')
+  .parse()
