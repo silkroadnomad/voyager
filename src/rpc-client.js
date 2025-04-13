@@ -1,5 +1,5 @@
 import { join } from 'path'
-import { Identities, KeyStore } from '@orbitdb/core'
+import { Identities, KeyStore } from '@le-space/orbitdb'
 import { createLibp2p } from 'libp2p'
 import { Commands, sendCommand } from './rpc/index.js'
 import { rpc as rpcId, appPath, rpcPath } from './utils/id.js'

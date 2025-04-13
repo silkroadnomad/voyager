@@ -1,7 +1,7 @@
 import { createHelia } from 'helia'
 import { createLibp2p } from 'libp2p'
 import { bitswap } from '@helia/block-brokers'
-import { createOrbitDB } from '@orbitdb/core'
+import { createOrbitDB } from '@le-space/orbitdb'
 import Voyager_ from '../../src/lib/voyager.js'
 // import connectPeers from './connect-nodes.js'
 import connect from './connect-nodes-via-relay.js'

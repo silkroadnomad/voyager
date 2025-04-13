@@ -5,7 +5,7 @@ import { LevelDatastore } from 'datastore-level'
 import { createLibp2p } from 'libp2p'
 import { bitswap } from '@helia/block-brokers'
 import { multiaddr } from '@multiformats/multiaddr'
-import { createOrbitDB } from '@orbitdb/core'
+import { createOrbitDB } from '@le-space/orbitdb'
 import Host from '../../src/lib/host.js'
 import { host as hostId } from '../../src/utils/id.js'
 

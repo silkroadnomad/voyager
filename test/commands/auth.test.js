@@ -1,5 +1,5 @@
 import { rpc as rpcId, rpcPath } from '../../src/utils/id.js'
-import { Identities, KeyStore } from '@orbitdb/core'
+import { Identities, KeyStore } from '@le-space/orbitdb'
 import { spawn, execSync } from 'node:child_process'
 import { strictEqual } from 'assert'
 import { renameSync } from 'fs'

@@ -1,5 +1,5 @@
 import { Set } from '@orbitdb/set-db'
-import { useDatabaseType } from '@orbitdb/core'
+import { useDatabaseType } from '@le-space/orbitdb'
 
 export const Access = Object.freeze({
   ALLOW: 1,

@@ -1,6 +1,6 @@
 import { pipe } from 'it-pipe'
 import { logger, enable } from '@libp2p/logger'
-import { KeyValueIndexed } from '@orbitdb/core'
+import { KeyValueIndexed } from '@le-space/orbitdb'
 import { voyagerProtocol } from './protocol.js'
 import { handleRequest } from './handle-request.js'
 import Authorization, { Access } from './authorization.js'

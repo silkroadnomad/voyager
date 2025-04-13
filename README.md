@@ -206,7 +206,7 @@ Next, instantiate Voyager remote API:
 ```js
 import { createLibp2p } from 'libp2p'
 import { createHelia } from 'helia'
-import { createOrbitDB } from '@orbitdb/core'
+import { createOrbitDB } from '@le-space/orbitdb'
 import { Voyager } from '@orbitdb/voyager'
 
 // set up libp2p, helia and orbitdb

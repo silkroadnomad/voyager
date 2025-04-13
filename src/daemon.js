@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { createLibp2p } from 'libp2p'
 import { createHelia } from 'helia'
-import { createOrbitDB, Identities, KeyStore } from '@orbitdb/core'
+import { createOrbitDB, Identities, KeyStore } from '@le-space/orbitdb'
 import { LevelBlockstore } from 'blockstore-level'
 import { LevelDatastore } from 'datastore-level'
 import { pipe } from 'it-pipe'
@@ -16,6 +16,17 @@ import { logger, enable } from '@libp2p/logger'
 import { prometheusMetrics } from '@libp2p/prometheus-metrics'
 import { startMetricsServer } from './metrics-server.js'
 import { WebSocketsSecure } from '@multiformats/multiaddr-matcher'
+
+// Add global error handlers
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err)
+  // Don't exit the process
+})
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+  // Don't exit the process
+})
 
 const createRPCIdentity = async ({ id, directory }) => {
   const keystore = await KeyStore({ path: join(rpcPath(directory), 'keystore') })
@@ -103,6 +114,13 @@ export default async ({ options }) => {
   }
 
   const ipfs = await createHelia({ libp2p, datastore, blockstore })
+  ipfs.libp2p.addEventListener('error', (err) => {
+    console.error('Libp2p error:', err)
+  })
+  
+  process.on('unhandledRejection', (error) => {
+    console.error('Unhandled rejection:', error)
+  })
   const orbitdb = await createOrbitDB({ ipfs, directory: hostDirectory, id: hostId })
   const host = await Host({ defaultAccess, verbose: options.verbose, orbitdb })
 

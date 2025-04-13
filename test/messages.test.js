@@ -5,7 +5,7 @@ import { Voyager } from './utils/launch-voyager-remote.js'
 import { launchVoyagerHost } from './utils/launch-voyager-host.js'
 import { rimraf } from 'rimraf'
 import { pipe } from 'it-pipe'
-import { Identities } from '@orbitdb/core'
+import { Identities } from '@le-space/orbitdb'
 
 describe('Messages', function () {
   this.timeout(10000)
